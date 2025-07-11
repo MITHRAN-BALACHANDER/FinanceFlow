@@ -19,15 +19,16 @@ import { CalendarIcon, Lightbulb } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { categories, type Category, type Expense } from '@/lib/types';
+import { type Category, type Expense } from '@/lib/types';
 import { suggestExpenseCategory } from '@/ai/flows/suggest-expense-category';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { useCategories } from '@/hooks/use-categories';
 
 const expenseFormSchema = z.object({
   description: z.string().min(2, 'Description must be at least 2 characters.'),
   amount: z.coerce.number().positive('Amount must be a positive number.'),
-  category: z.enum(categories),
+  category: z.string().min(1, 'Please select a category.'),
   date: z.date(),
 });
 
@@ -41,6 +42,7 @@ interface ExpenseFormProps {
 export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
   const [isSuggesting, setIsSuggesting] = useState(false);
   const { toast } = useToast();
+  const { allCategories } = useCategories();
 
   const form = useForm<ExpenseFormValues>({
     resolver: zodResolver(expenseFormSchema),
@@ -60,7 +62,7 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
     setIsSuggesting(true);
     try {
       const result = await suggestExpenseCategory({ description });
-      if (result.category && categories.includes(result.category as Category)) {
+      if (result.category && allCategories.includes(result.category as Category)) {
         form.setValue('category', result.category as Category, { shouldValidate: true });
         toast({ title: 'Category Suggested!', description: `We've set the category to "${result.category}".`});
       } else {
@@ -122,7 +124,7 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {categories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                    {allCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
                   </SelectContent>
                 </Select>
                 <Button type="button" variant="outline" size="icon" onClick={handleSuggestCategory} disabled={isSuggesting}>
@@ -146,7 +148,7 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
                       variant={'outline'}
                       className={cn(
                         'w-full pl-3 text-left font-normal',
-                        !field.ve && 'text-muted-foreground'
+                        !field.value && 'text-muted-foreground'
                       )}
                     >
                       {field.value ? (

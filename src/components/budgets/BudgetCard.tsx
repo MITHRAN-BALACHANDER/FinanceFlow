@@ -11,14 +11,14 @@ export function BudgetCard({ budget }: BudgetCardProps) {
     const progress = (budget.spent / budget.amount) * 100;
     const remaining = budget.amount - budget.spent;
     // @ts-ignore
-    const Icon = Lucide[categoryIcons[budget.category]] || Lucide.Sprout;
+    const IconComponent = Lucide[categoryIcons[budget.category]] || Lucide[categoryIcons['Default']];
 
     return (
         <Card>
             <CardHeader className="pb-4">
                 <div className="flex items-center justify-between">
                     <CardTitle className="text-lg flex items-center gap-2">
-                        <Icon className="h-5 w-5 text-muted-foreground" />
+                        <IconComponent className="h-5 w-5 text-muted-foreground" />
                         {budget.category}
                     </CardTitle>
                     <div className="text-lg font-bold">₹{budget.amount.toFixed(2)}</div>

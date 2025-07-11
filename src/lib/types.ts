@@ -1,15 +1,16 @@
-export type Category = 'Food' | 'Transport' | 'Shopping' | 'Utilities' | 'Entertainment' | 'Health' | 'Other';
+export type Category = string;
 
-export const categories: Category[] = ['Food', 'Transport', 'Shopping', 'Utilities', 'Entertainment', 'Health', 'Other'];
+export const defaultCategories: Category[] = ['Food', 'Transport', 'Shopping', 'Utilities', 'Entertainment', 'Health', 'Other'];
 
-export const categoryIcons: Record<Category, string> = {
+export const categoryIcons: Record<string, string> = {
     Food: 'Utensils',
     Transport: 'Car',
     Shopping: 'ShoppingBag',
     Utilities: 'Lightbulb',
     Entertainment: 'Ticket',
     Health: 'HeartPulse',
-    Other: 'Sprout'
+    Other: 'Sprout',
+    Default: 'Shapes'
 };
 
 export type Expense = {
@@ -27,3 +28,9 @@ export type Budget = {
   category: Category;
   amount: number;
 };
+
+export type UserCategory = {
+    id: string;
+    userId: string;
+    name: string;
+}

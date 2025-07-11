@@ -14,15 +14,16 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { categories, type Budget } from '@/lib/types';
+import { type Budget } from '@/lib/types';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
+import { useCategories } from '@/hooks/use-categories';
 
 
 const budgetFormSchema = z.object({
   amount: z.coerce.number().positive('Amount must be a positive number.'),
-  category: z.enum(categories),
+  category: z.string().min(1, 'Please select a category.'),
 });
 
 type BudgetFormValues = z.infer<typeof budgetFormSchema>;
@@ -33,6 +34,7 @@ interface AddBudgetDialogProps {
 
 export function AddBudgetDialog({ onSubmit }: AddBudgetDialogProps) {
     const [open, setOpen] = useState(false);
+    const { allCategories } = useCategories();
 
     const form = useForm<BudgetFormValues>({
         resolver: zodResolver(budgetFormSchema),
@@ -74,7 +76,7 @@ export function AddBudgetDialog({ onSubmit }: AddBudgetDialogProps) {
                         </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                        {categories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                        {allCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
                     </SelectContent>
                     </Select>
                     <FormMessage />

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { AreaChart, LayoutDashboard, LoaderCircle, LogIn, LogOut, ReceiptText, Target, Wallet } from 'lucide-react';
+import { AreaChart, LayoutDashboard, LoaderCircle, LogIn, LogOut, ReceiptText, Shapes, Target, Wallet } from 'lucide-react';
 import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarHeader, SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -16,6 +16,7 @@ const navItems = [
   { href: '/expenses', label: 'Expenses', icon: ReceiptText },
   { href: '/budgets', label: 'Budgets', icon: Target },
   { href: '/reports', label: 'Reports', icon: AreaChart },
+  { href: '/categories', label: 'Categories', icon: Shapes },
 ];
 
 function UserNav() {

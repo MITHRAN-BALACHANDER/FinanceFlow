@@ -10,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { defaultCategories } from '@/lib/types';
 
 const SuggestExpenseCategoryInputSchema = z.object({
   description: z.string().describe('The description of the expense.'),
@@ -29,7 +30,9 @@ const prompt = ai.definePrompt({
   name: 'suggestExpenseCategoryPrompt',
   input: {schema: SuggestExpenseCategoryInputSchema},
   output: {schema: SuggestExpenseCategoryOutputSchema},
-  prompt: `Given the following expense description, suggest an appropriate expense category.
+  prompt: `Given the following expense description, suggest an appropriate expense category from the following list: ${defaultCategories.join(', ')}.
+
+If no category from the list seems appropriate, you can suggest one, but try to use the list first.
 
 Description: {{{description}}}
 

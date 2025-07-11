@@ -67,7 +67,7 @@ export function RecentExpensesCard() {
                 <TableRow key={expense.id}>
                   <TableCell>
                     <div className="font-medium">{expense.description}</div>
-                    <div className="text-sm text-muted-foreground">{format(expense.date, 'MMM d, yyyy')}</div>
+                    <div className="text-sm text-muted-foreground">{format(expense.date, 'MMM d, yyyy h:mm a')}</div>
                   </TableCell>
                   <TableCell>
                     <Badge variant="outline">{expense.category}</Badge>

@@ -27,6 +27,9 @@ const expenseFormSchema = z.object({
   amount: z.coerce.number().positive('Amount must be a positive number.'),
   category: z.string().min(1, 'Please select a category.'),
   date: z.date(),
+  time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+    message: "Invalid time format. Use HH:mm",
+  }),
 });
 
 type ExpenseFormValues = z.infer<typeof expenseFormSchema>;
@@ -45,11 +48,17 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
       description: '',
       amount: 0,
       date: new Date(),
+      time: format(new Date(), 'HH:mm'),
     },
   });
 
   const handleSubmit = (data: ExpenseFormValues) => {
-    onSubmit(data);
+    const [hours, minutes] = data.time.split(':').map(Number);
+    const combinedDateTime = new Date(data.date);
+    combinedDateTime.setHours(hours);
+    combinedDateTime.setMinutes(minutes);
+
+    onSubmit({ ...data, date: combinedDateTime });
     setOpen(false);
     form.reset();
   };
@@ -103,47 +112,62 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={'outline'}
-                      className={cn(
-                        'w-full pl-3 text-left font-normal',
-                        !field.value && 'text-muted-foreground'
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, 'PPP')
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date('1900-01-01')
-                    }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex gap-4">
+            <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+                <FormItem className="flex flex-col flex-1">
+                <FormLabel>Date</FormLabel>
+                <Popover>
+                    <PopoverTrigger asChild>
+                    <FormControl>
+                        <Button
+                        variant={'outline'}
+                        className={cn(
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground'
+                        )}
+                        >
+                        {field.value ? (
+                            format(field.value, 'PPP')
+                        ) : (
+                            <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                    </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                        date > new Date() || date < new Date('1900-01-01')
+                        }
+                        initialFocus
+                    />
+                    </PopoverContent>
+                </Popover>
+                <FormMessage />
+                </FormItem>
+            )}
+            />
+             <FormField
+                control={form.control}
+                name="time"
+                render={({ field }) => (
+                <FormItem className="flex flex-col w-28">
+                    <FormLabel>Time</FormLabel>
+                    <FormControl>
+                    <Input type="time" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+        </div>
         <Button type="submit" className="w-full">Add Expense</Button>
       </form>
     </Form>

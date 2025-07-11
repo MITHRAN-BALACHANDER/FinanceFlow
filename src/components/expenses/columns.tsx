@@ -54,7 +54,7 @@ export const getColumns = ({ deleteExpense }: ColumnsProps): ColumnDef<Expense>[
       },
     cell: ({ row }) => {
       const date = row.getValue('date') as Date;
-      return <span className="pl-4">{format(date, 'MMM d, yyyy')}</span>;
+      return <div className="pl-4 whitespace-nowrap">{format(date, 'MMM d, yyyy h:mm a')}</div>;
     },
   },
   {

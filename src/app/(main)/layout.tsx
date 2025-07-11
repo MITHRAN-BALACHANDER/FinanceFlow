@@ -5,7 +5,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AreaChart, LayoutDashboard, LoaderCircle, LogIn, LogOut, ReceiptText, Shapes, Target, User as UserIcon, Wallet } from 'lucide-react';
-import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarHeader, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarInset, SidebarHeader, SidebarTrigger, SidebarFooter } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -13,6 +13,7 @@ import { useAuth } from '@/context/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BottomNavbar } from '@/components/BottomNavbar';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -41,7 +42,7 @@ function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button variant="ghost" className={cn("relative h-8 w-8 rounded-full", "group-data-[collapsible=icon]:h-10 group-data-[collapsible=icon]:w-10")}>
           <Avatar className="h-9 w-9">
             <AvatarImage src={user.photoURL || "https://placehold.co/40x40"} alt={user.displayName || "User"} />
             <AvatarFallback>{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
@@ -113,7 +114,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             <h1 className="text-xl font-bold text-white group-data-[collapsible=icon]:hidden">FinanceFlow</h1>
           </div>
         </SidebarHeader>
-        <SidebarMenu>
+        <SidebarMenu className="flex-1">
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
               <Link href={item.href}>
@@ -131,6 +132,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             </SidebarMenuItem>
           ))}
         </SidebarMenu>
+        <SidebarFooter>
+            <div className="group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
+              <UserNav />
+            </div>
+        </SidebarFooter>
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -142,9 +148,6 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
             </div>
             <div className="hidden md:block">
               <SidebarTrigger />
-            </div>
-            <div className="ml-auto">
-              <UserNav />
             </div>
         </header>
         <main className="p-4 sm:px-6 sm:py-0 pb-20 md:pb-0">

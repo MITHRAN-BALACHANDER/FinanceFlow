@@ -23,6 +23,12 @@ const navItems = [
   { href: '/categories', label: 'Categories', icon: Shapes },
 ];
 
+const mobileNavItems = [
+    ...navItems.slice(0, 4), // Show first 4 items
+    { href: '/profile', label: 'Profile', icon: UserIcon },
+];
+
+
 function UserNav() {
   const { user, loading, logIn, logOut } = useAuth();
 
@@ -139,21 +145,22 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <div className="md:hidden">
-                <div className="flex items-center gap-2">
-                    <Wallet className="h-6 w-6 text-primary" />
-                    <h1 className="text-xl font-bold">FinanceFlow</h1>
-                </div>
+        <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+            <div className="flex items-center gap-2 md:hidden">
+                <Wallet className="h-6 w-6 text-primary" />
+                <h1 className="text-xl font-bold">FinanceFlow</h1>
             </div>
             <div className="hidden md:block">
               <SidebarTrigger />
+            </div>
+            <div className="md:hidden">
+              <UserNav />
             </div>
         </header>
         <main className="p-4 sm:px-6 sm:py-0 pb-20 md:pb-0">
          {children}
         </main>
-        {isMobile && <BottomNavbar navItems={navItems} />}
+        {isMobile && <BottomNavbar navItems={mobileNavItems} />}
       </SidebarInset>
     </SidebarProvider>
   );

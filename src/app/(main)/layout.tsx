@@ -107,7 +107,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 lg:hidden">
+            <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
               <Wallet className="h-5 w-5 text-primary" />
             </Button>
             <h1 className="text-xl font-bold text-white group-data-[collapsible=icon]:hidden">FinanceFlow</h1>

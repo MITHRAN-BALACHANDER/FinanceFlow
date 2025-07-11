@@ -125,7 +125,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
                 >
                   <div>
                     <item.icon />
-                    <span>{item.label}</span>
+                    <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
                   </div>
                 </SidebarMenuButton>
               </Link>

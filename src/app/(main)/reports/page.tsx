@@ -13,7 +13,7 @@ export default function ReportsPage() {
     const [expenses, setExpenses] = useState<Expense[]>([]);
 
     useEffect(() => {
-        if(user) {
+        if(user && db) {
             const q = query(collection(db, "expenses"), where("userId", "==", user.uid));
             const unsubscribe = onSnapshot(q, (snapshot) => {
                 const userExpenses = snapshot.docs.map(doc => {

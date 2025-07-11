@@ -15,7 +15,7 @@ export default function BudgetsPage() {
     const [expenses, setExpenses] = useState<Expense[]>([]);
 
     useEffect(() => {
-        if (user) {
+        if (user && db) {
             const budgetsQuery = query(collection(db, "budgets"), where("userId", "==", user.uid));
             const unsubscribeBudgets = onSnapshot(budgetsQuery, (snapshot) => {
                 const userBudgets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Budget));
@@ -44,7 +44,7 @@ export default function BudgetsPage() {
 
 
     const addBudget = async (budget: Omit<Budget, 'id' | 'userId'>) => {
-        if (!user) return;
+        if (!user || !db) return;
 
         const existingBudget = budgets.find(b => b.category === budget.category);
 

@@ -15,7 +15,7 @@ export function BudgetsCard() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
 
   useEffect(() => {
-    if (user) {
+    if (user && db) {
       const budgetsQuery = query(collection(db, "budgets"), where("userId", "==", user.uid));
       const unsubscribeBudgets = onSnapshot(budgetsQuery, (snapshot) => {
         setBudgets(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Budget)));

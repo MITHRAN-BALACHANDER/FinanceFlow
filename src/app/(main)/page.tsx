@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
 
   useEffect(() => {
-    if (user) {
+    if (user && db) {
       const today = new Date();
       const start = startOfMonth(today);
       const end = endOfMonth(today);

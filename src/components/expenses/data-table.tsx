@@ -41,7 +41,7 @@ export function ExpensesDataTable() {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
   React.useEffect(() => {
-    if (!user) return;
+    if (!user || !db) return;
     
     const q = query(collection(db, "expenses"), where("userId", "==", user.uid));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -61,11 +61,12 @@ export function ExpensesDataTable() {
   }, [user]);
 
   const addExpense = async (expense: Omit<Expense, 'id'>) => {
-    if (!user) return;
+    if (!user || !db) return;
     await addDoc(collection(db, "expenses"), { ...expense, userId: user.uid });
   };
 
   const deleteExpense = async (id: string) => {
+    if (!db) return;
     await deleteDoc(doc(db, "expenses", id));
   };
   

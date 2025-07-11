@@ -16,7 +16,7 @@ export function RecentExpensesCard() {
   const [recentExpenses, setRecentExpenses] = useState<Expense[]>([]);
 
   useEffect(() => {
-    if (user) {
+    if (user && db) {
       const q = query(
         collection(db, "expenses"), 
         where("userId", "==", user.uid), 

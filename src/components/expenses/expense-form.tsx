@@ -15,14 +15,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
-import { CalendarIcon, Lightbulb } from 'lucide-react';
+import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { type Category, type Expense } from '@/lib/types';
-import { suggestExpenseCategory } from '@/ai/flows/suggest-expense-category';
-import { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
+import { type Expense } from '@/lib/types';
 import { useCategories } from '@/hooks/use-categories';
 
 const expenseFormSchema = z.object({
@@ -40,8 +37,6 @@ interface ExpenseFormProps {
 }
 
 export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
-  const [isSuggesting, setIsSuggesting] = useState(false);
-  const { toast } = useToast();
   const { allCategories } = useCategories();
 
   const form = useForm<ExpenseFormValues>({
@@ -52,28 +47,6 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
       date: new Date(),
     },
   });
-
-  const handleSuggestCategory = async () => {
-    const description = form.getValues('description');
-    if (!description) {
-      form.setError('description', { message: 'Please enter a description first.' });
-      return;
-    }
-    setIsSuggesting(true);
-    try {
-      const result = await suggestExpenseCategory({ description });
-      if (result.category && allCategories.includes(result.category as Category)) {
-        form.setValue('category', result.category as Category, { shouldValidate: true });
-        toast({ title: 'Category Suggested!', description: `We've set the category to "${result.category}".`});
-      } else {
-        toast({ variant: 'destructive', title: 'Suggestion Failed', description: 'Could not find a matching category.'});
-      }
-    } catch (error) {
-        toast({ variant: 'destructive', title: 'Error', description: 'An error occurred while suggesting a category.' });
-    } finally {
-      setIsSuggesting(false);
-    }
-  };
 
   const handleSubmit = (data: ExpenseFormValues) => {
     onSubmit(data);
@@ -116,7 +89,6 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Category</FormLabel>
-              <div className="flex items-center gap-2">
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -127,10 +99,6 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
                     {allCategories.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
                   </SelectContent>
                 </Select>
-                <Button type="button" variant="outline" size="icon" onClick={handleSuggestCategory} disabled={isSuggesting}>
-                  <Lightbulb className="h-4 w-4" />
-                </Button>
-              </div>
               <FormMessage />
             </FormItem>
           )}

@@ -14,6 +14,7 @@ export const categoryIcons: Record<Category, string> = {
 
 export type Expense = {
   id: string;
+  userId: string;
   description: string;
   amount: number;
   category: Category;
@@ -22,6 +23,7 @@ export type Expense = {
 
 export type Budget = {
   id: string;
+  userId: string;
   category: Category;
   amount: number;
 };

@@ -3,30 +3,68 @@
 import { PageHeader } from "@/components/PageHeader";
 import { AddBudgetDialog } from "@/components/budgets/AddBudgetDialog";
 import { BudgetCard } from "@/components/budgets/BudgetCard";
-import { initialBudgets, initialExpenses } from "@/lib/data";
-import type { Budget } from "@/lib/types";
-import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { db } from "@/lib/firebase";
+import type { Budget, Expense } from "@/lib/types";
+import { collection, addDoc, onSnapshot, query, where, doc, updateDoc } from "firebase/firestore";
+import { useEffect, useMemo, useState } from "react";
 
 export default function BudgetsPage() {
-    const [budgets, setBudgets] = useState<Budget[]>(initialBudgets);
+    const { user } = useAuth();
+    const [budgets, setBudgets] = useState<Budget[]>([]);
+    const [expenses, setExpenses] = useState<Expense[]>([]);
 
-    const addBudget = (budget: Omit<Budget, 'id'>) => {
-        const existingBudgetIndex = budgets.findIndex(b => b.category === budget.category);
-        if (existingBudgetIndex > -1) {
-            const updatedBudgets = [...budgets];
-            updatedBudgets[existingBudgetIndex].amount = budget.amount;
-            setBudgets(updatedBudgets);
+    useEffect(() => {
+        if (user) {
+            const budgetsQuery = query(collection(db, "budgets"), where("userId", "==", user.uid));
+            const unsubscribeBudgets = onSnapshot(budgetsQuery, (snapshot) => {
+                const userBudgets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Budget));
+                setBudgets(userBudgets);
+            });
+
+            const expensesQuery = query(collection(db, "expenses"), where("userId", "==", user.uid));
+            const unsubscribeExpenses = onSnapshot(expensesQuery, (snapshot) => {
+                const userExpenses = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        ...data,
+                        date: data.date.toDate(),
+                    } as Expense;
+                });
+                setExpenses(userExpenses);
+            });
+
+            return () => {
+                unsubscribeBudgets();
+                unsubscribeExpenses();
+            };
+        }
+    }, [user]);
+
+
+    const addBudget = async (budget: Omit<Budget, 'id' | 'userId'>) => {
+        if (!user) return;
+
+        const existingBudget = budgets.find(b => b.category === budget.category);
+
+        if (existingBudget) {
+            const budgetRef = doc(db, "budgets", existingBudget.id);
+            await updateDoc(budgetRef, { amount: budget.amount });
         } else {
-            setBudgets(prev => [...prev, { ...budget, id: Date.now().toString() }]);
+             await addDoc(collection(db, "budgets"), {
+                ...budget,
+                userId: user.uid,
+            });
         }
     }
 
-    const budgetsWithSpending = budgets.map(budget => {
-        const spent = initialExpenses
+    const budgetsWithSpending = useMemo(() => budgets.map(budget => {
+        const spent = expenses
           .filter(expense => expense.category === budget.category)
           .reduce((sum, expense) => sum + expense.amount, 0);
         return { ...budget, spent };
-      });
+      }), [budgets, expenses]);
 
     return (
         <>

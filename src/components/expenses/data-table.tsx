@@ -26,24 +26,47 @@ import { PlusCircle } from 'lucide-react';
 import { ExpenseForm } from './expense-form';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import type { Expense } from '@/lib/types';
-import { initialExpenses } from '@/lib/data';
 import { getColumns } from './columns';
 import { PageHeader } from '../PageHeader';
 import { Input } from '../ui/input';
+import { useAuth } from '@/context/AuthContext';
+import { collection, addDoc, onSnapshot, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export function ExpensesDataTable() {
-  const [data, setData] = React.useState<Expense[]>(initialExpenses);
+  const { user } = useAuth();
+  const [data, setData] = React.useState<Expense[]>([]);
   const [open, setOpen] = React.useState(false);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
 
-  const addExpense = (expense: Omit<Expense, 'id'>) => {
-    const newExpense = { ...expense, id: Date.now().toString() };
-    setData(prev => [newExpense, ...prev]);
+  React.useEffect(() => {
+    if (!user) return;
+    
+    const q = query(collection(db, "expenses"), where("userId", "==", user.uid));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const expensesData = querySnapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                ...data,
+                id: doc.id,
+                date: data.date.toDate() 
+            } as Expense
+        });
+        setData(expensesData);
+    });
+
+    return () => unsubscribe();
+
+  }, [user]);
+
+  const addExpense = async (expense: Omit<Expense, 'id'>) => {
+    if (!user) return;
+    await addDoc(collection(db, "expenses"), { ...expense, userId: user.uid });
   };
 
-  const deleteExpense = (id: string) => {
-    setData(prev => prev.filter(expense => expense.id !== id));
+  const deleteExpense = async (id: string) => {
+    await deleteDoc(doc(db, "expenses", id));
   };
   
   const columns = React.useMemo(() => getColumns({ deleteExpense }), []);

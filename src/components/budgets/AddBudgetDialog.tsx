@@ -28,7 +28,7 @@ const budgetFormSchema = z.object({
 type BudgetFormValues = z.infer<typeof budgetFormSchema>;
 
 interface AddBudgetDialogProps {
-  onSubmit: (data: Omit<Budget, 'id'>) => void;
+  onSubmit: (data: Omit<Budget, 'id' | 'userId'>) => void;
 }
 
 export function AddBudgetDialog({ onSubmit }: AddBudgetDialogProps) {

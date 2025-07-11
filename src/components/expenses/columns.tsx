@@ -26,6 +26,7 @@ export const getColumns = ({ deleteExpense }: ColumnsProps): ColumnDef<Expense>[
         </Button>
       );
     },
+    cell: ({ row }) => <div className="pl-4">{row.getValue("description")}</div>,
   },
   {
     accessorKey: 'category',
@@ -33,6 +34,9 @@ export const getColumns = ({ deleteExpense }: ColumnsProps): ColumnDef<Expense>[
     cell: ({ row }) => {
       const category = row.getValue('category') as string;
       return <Badge variant="outline">{category}</Badge>;
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
     },
   },
   {
@@ -50,7 +54,7 @@ export const getColumns = ({ deleteExpense }: ColumnsProps): ColumnDef<Expense>[
       },
     cell: ({ row }) => {
       const date = row.getValue('date') as Date;
-      return <span>{format(date, 'MMM d, yyyy')}</span>;
+      return <span className="pl-4">{format(date, 'MMM d, yyyy')}</span>;
     },
   },
   {
@@ -74,7 +78,7 @@ export const getColumns = ({ deleteExpense }: ColumnsProps): ColumnDef<Expense>[
         style: 'currency',
         currency: 'INR',
       }).format(amount);
-      return <div className="text-right font-medium">{formatted}</div>;
+      return <div className="text-right font-medium pr-4">{formatted}</div>;
     },
   },
   {

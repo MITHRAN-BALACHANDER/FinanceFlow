@@ -34,7 +34,7 @@ const expenseFormSchema = z.object({
 type ExpenseFormValues = z.infer<typeof expenseFormSchema>;
 
 interface ExpenseFormProps {
-  onSubmit: (data: Omit<Expense, 'id'>) => void;
+  onSubmit: (data: Omit<Expense, 'id' | 'userId'>) => void;
   setOpen: (open: boolean) => void;
 }
 
@@ -76,6 +76,7 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
   const handleSubmit = (data: ExpenseFormValues) => {
     onSubmit(data);
     setOpen(false);
+    form.reset();
   };
 
   return (
@@ -145,7 +146,7 @@ export function ExpenseForm({ onSubmit, setOpen }: ExpenseFormProps) {
                       variant={'outline'}
                       className={cn(
                         'w-full pl-3 text-left font-normal',
-                        !field.value && 'text-muted-foreground'
+                        !field.ve && 'text-muted-foreground'
                       )}
                     >
                       {field.value ? (

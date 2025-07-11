@@ -104,16 +104,16 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
         <SidebarMenu>
           {navItems.map((item) => (
             <SidebarMenuItem key={item.href}>
-              <Link href={item.href} passHref>
+              <Link href={item.href}>
                 <SidebarMenuButton
                   asChild
                   isActive={pathname === item.href}
                   tooltip={item.label}
                 >
-                  <>
+                  <div>
                     <item.icon />
                     <span>{item.label}</span>
-                  </>
+                  </div>
                 </SidebarMenuButton>
               </Link>
             </SidebarMenuItem>

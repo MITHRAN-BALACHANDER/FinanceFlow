@@ -24,8 +24,8 @@ const navItems = [
 ];
 
 const mobileNavItems = [
-    ...navItems.slice(0, 4), // Show first 4 items
-    { href: '/profile', label: 'Profile', icon: UserIcon },
+    ...navItems.slice(0, 5), // Show first 4 items
+
 ];
 
 

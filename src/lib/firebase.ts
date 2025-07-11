@@ -20,11 +20,19 @@ if (allConfigPresent) {
     auth = getAuth(app);
     db = getFirestore(app);
 } else {
-    console.warn("Firebase configuration is incomplete. Please check your .env file. The app will continue without Firebase functionality.");
+    console.warn("Firebase configuration is incomplete. Using mock data. Please check your .env file.");
     // Provide mock/null objects so the rest of the app doesn't crash
-    app = null;
-    auth = null;
-    db = null;
+    const mockConfig = {
+      apiKey: "mock-key",
+      authDomain: "mock.firebaseapp.com",
+      projectId: "mock-project",
+      storageBucket: "mock.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:mock-app-id"
+    };
+    app = !getApps().length ? initializeApp(mockConfig) : getApp();
+    auth = getAuth(app);
+    db = getFirestore(app);
 }
 
 

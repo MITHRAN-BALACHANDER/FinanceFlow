@@ -1,11 +1,13 @@
+
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, type ReactNode, Dispatch, SetStateAction } from 'react';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signOut, type User } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 
 interface AuthContextType {
   user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
   loading: boolean;
   logIn: () => Promise<void>;
   logOut: () => Promise<void>;
@@ -38,7 +40,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!auth) {
-        // If Firebase is not configured, use a mock user for development
         console.log("Using mock user for development.");
         setUser(mockUser);
         setLoading(false);
@@ -54,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logIn = async () => {
     if (!auth) {
         console.error("Firebase is not configured. Cannot log in.");
+        setUser(mockUser); // Set mock user on login attempt
         return;
     }
     const provider = new GoogleAuthProvider();
@@ -66,7 +68,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logOut = async () => {
     if (!auth) {
-        // In mock mode, "logging out" can just clear the user
         console.log("Simulating logout.");
         setUser(null);
         return;
@@ -79,7 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const value = { user, loading, logIn, logOut };
+  const value = { user, setUser, loading, logIn, logOut };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

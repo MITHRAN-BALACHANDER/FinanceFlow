@@ -37,7 +37,7 @@ export function RecentExpensesCard() {
                     <Badge variant="outline">{expense.category}</Badge>
                   </TableCell>
                   <TableCell className="text-right font-medium">
-                    ${expense.amount.toFixed(2)}
+                    ₹{expense.amount.toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}

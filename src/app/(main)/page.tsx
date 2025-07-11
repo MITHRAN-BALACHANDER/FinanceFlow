@@ -16,19 +16,19 @@ export default function DashboardPage() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <StatCard 
           title="Total Expenses (Month)"
-          value={`$${totalExpenses.toFixed(2)}`}
+          value={`₹${totalExpenses.toFixed(2)}`}
           icon={DollarSign}
           description="Your total spending for July"
         />
         <StatCard 
           title="Total Income (Month)"
-          value={`$${totalIncome.toFixed(2)}`}
+          value={`₹${totalIncome.toFixed(2)}`}
           icon={Landmark}
           description="Your total income for July"
         />
         <StatCard 
           title="Net Savings (Month)"
-          value={`$${savings.toFixed(2)}`}
+          value={`₹${savings.toFixed(2)}`}
           icon={CreditCard}
           description="Your net savings for July"
           trend="up"

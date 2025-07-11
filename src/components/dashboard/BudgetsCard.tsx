@@ -28,7 +28,7 @@ export function BudgetsCard() {
                 <div className="mb-1 flex justify-between text-sm">
                   <span className="font-medium">{budget.category}</span>
                   <span className="text-muted-foreground">
-                    ${budget.spent.toFixed(2)} / ${budget.amount.toFixed(2)}
+                    ₹{budget.spent.toFixed(2)} / ₹{budget.amount.toFixed(2)}
                   </span>
                 </div>
                 <Progress value={budget.progress} />

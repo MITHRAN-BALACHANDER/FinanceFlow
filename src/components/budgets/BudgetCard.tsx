@@ -21,16 +21,16 @@ export function BudgetCard({ budget }: BudgetCardProps) {
                         <Icon className="h-5 w-5 text-muted-foreground" />
                         {budget.category}
                     </CardTitle>
-                    <div className="text-lg font-bold">${budget.amount.toFixed(2)}</div>
+                    <div className="text-lg font-bold">₹{budget.amount.toFixed(2)}</div>
                 </div>
                 <CardDescription>Budgeted Amount</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
                 <Progress value={progress} />
                 <div className="text-sm text-muted-foreground flex justify-between">
-                    <span>${budget.spent.toFixed(2)} spent</span>
+                    <span>₹{budget.spent.toFixed(2)} spent</span>
                     <span className={remaining < 0 ? 'text-destructive font-semibold' : ''}>
-                        {remaining >= 0 ? `$${remaining.toFixed(2)} remaining` : `$${Math.abs(remaining).toFixed(2)} over`}
+                        {remaining >= 0 ? `₹${remaining.toFixed(2)} remaining` : `₹${Math.abs(remaining).toFixed(2)} over`}
                     </span>
                 </div>
             </CardContent>

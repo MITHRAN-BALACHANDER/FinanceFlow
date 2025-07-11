@@ -11,6 +11,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/context/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
+import { BottomNavbar } from '@/components/BottomNavbar';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const navItems = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -69,6 +71,7 @@ function UserNav() {
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, loading } = useAuth();
+  const isMobile = useIsMobile();
   
   if (loading) {
     return (
@@ -124,14 +127,23 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-            <SidebarTrigger />
+            <div className="md:hidden">
+                <div className="flex items-center gap-2">
+                    <Wallet className="h-6 w-6 text-primary" />
+                    <h1 className="text-xl font-bold">FinanceFlow</h1>
+                </div>
+            </div>
+            <div className="hidden md:block">
+              <SidebarTrigger />
+            </div>
             <div className="ml-auto">
               <UserNav />
             </div>
         </header>
-        <main className="p-4 sm:px-6 sm:py-0">
+        <main className="p-4 sm:px-6 sm:py-0 pb-20 md:pb-0">
          {children}
         </main>
+        {isMobile && <BottomNavbar navItems={navItems} />}
       </SidebarInset>
     </SidebarProvider>
   );

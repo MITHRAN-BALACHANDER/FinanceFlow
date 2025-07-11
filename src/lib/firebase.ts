@@ -1,6 +1,6 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -13,26 +13,16 @@ const firebaseConfig = {
 
 const allConfigPresent = Object.values(firebaseConfig).every(Boolean);
 
-let app, auth, db;
+let app: FirebaseApp | undefined;
+let auth: Auth | undefined;
+let db: Firestore | undefined;
 
 if (allConfigPresent) {
     app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
     db = getFirestore(app);
 } else {
-    console.warn("Firebase configuration is incomplete. Using mock data. Please check your .env file.");
-    // Provide mock/null objects so the rest of the app doesn't crash
-    const mockConfig = {
-      apiKey: "mock-key",
-      authDomain: "mock.firebaseapp.com",
-      projectId: "mock-project",
-      storageBucket: "mock.appspot.com",
-      messagingSenderId: "1234567890",
-      appId: "1:1234567890:web:mock-app-id"
-    };
-    app = !getApps().length ? initializeApp(mockConfig) : getApp();
-    auth = getAuth(app);
-    db = getFirestore(app);
+    console.warn("Firebase configuration is incomplete. App will run in a mock environment. Please check your .env file.");
 }
 
 

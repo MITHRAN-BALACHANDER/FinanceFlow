@@ -13,12 +13,34 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const mockUser: User = {
+    uid: 'mock-user-id',
+    email: 'mock.user@example.com',
+    displayName: 'Mock User',
+    photoURL: 'https://placehold.co/40x40',
+    emailVerified: true,
+    isAnonymous: false,
+    metadata: {},
+    providerData: [],
+    providerId: 'mock',
+    tenantId: null,
+    delete: async () => {},
+    getIdToken: async () => 'mock-token',
+    getIdTokenResult: async () => ({ token: 'mock-token', expirationTime: '', authTime: '', issuedAtTime: '', signInProvider: null, signInSecondFactor: null, claims: {} }),
+    reload: async () => {},
+    toJSON: () => ({}),
+};
+
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!auth) {
+        // If Firebase is not configured, use a mock user for development
+        console.log("Using mock user for development.");
+        setUser(mockUser);
         setLoading(false);
         return;
     }
@@ -44,12 +66,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logOut = async () => {
     if (!auth) {
-        console.error("Firebase is not configured. Cannot log out.");
+        // In mock mode, "logging out" can just clear the user
+        console.log("Simulating logout.");
+        setUser(null);
         return;
     }
     try {
       await signOut(auth);
-    } catch (error) {
+    } catch (error)
+        {
       console.error("Error signing out", error);
     }
   };

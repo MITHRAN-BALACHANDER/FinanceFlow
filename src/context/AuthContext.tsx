@@ -16,21 +16,23 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const mockUser: User = {
-    uid: 'mock-user-id',
-    email: 'mock.user@example.com',
-    displayName: 'Mock User',
-    photoURL: 'https://placehold.co/40x40',
-    emailVerified: true,
-    isAnonymous: false,
-    metadata: {},
-    providerData: [],
-    providerId: 'mock',
-    tenantId: null,
-    delete: async () => {},
-    getIdToken: async () => 'mock-token',
-    getIdTokenResult: async () => ({ token: 'mock-token', expirationTime: '', authTime: '', issuedAtTime: '', signInProvider: null, signInSecondFactor: null, claims: {} }),
-    reload: async () => {},
-    toJSON: () => ({}),
+  uid: 'mock-user-id',
+  email: 'mock.user@example.com',
+  displayName: 'Mock User',
+  photoURL: 'https://placehold.co/40x40',
+  emailVerified: true,
+  isAnonymous: false,
+  metadata: {},
+  providerData: [],
+  providerId: 'mock',
+  tenantId: null,
+  delete: async () => { },
+  getIdToken: async () => 'mock-token',
+  getIdTokenResult: async () => ({ token: 'mock-token', expirationTime: '', authTime: '', issuedAtTime: '', signInProvider: null, signInSecondFactor: null, claims: {} }),
+  reload: async () => { },
+  toJSON: () => ({}),
+  refreshToken: '',
+  phoneNumber: null
 };
 
 

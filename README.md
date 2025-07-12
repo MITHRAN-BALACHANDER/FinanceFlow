@@ -20,7 +20,7 @@ An intuitive personal finance management app built with Next.js. Track your expe
 
 ## 🚀 Demo
 *(Link your live demo here, e.g.:)*  
-https://financeflow.vercel.app
+https://finance-flow-ruddy.vercel.app/
 
 ---
 

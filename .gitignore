@@ -39,9 +39,9 @@ next-env.d.ts
 
 .genkit/*
 .env*
-.idx
-.vscode
-docs 
+/.idx
+/.vscode
+/docs 
 # firebase
 firebase-debug.log
 firestore-debug.log

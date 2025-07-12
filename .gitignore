@@ -35,7 +35,7 @@ Thumbs.db
 
 # IDEs
 /.vscode
-
+/docs
 # Deployment
 .vercel
 

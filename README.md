@@ -18,8 +18,7 @@ An intuitive personal finance management app built with Next.js. Track your expe
 
 ---
 
-## 🚀 Demo
-*(Link your live demo here, e.g.:)*  
+## 🚀 Demo 
 https://finance-flow-ruddy.vercel.app/
 
 ---
@@ -27,9 +26,9 @@ https://finance-flow-ruddy.vercel.app/
 ## 🛠️ Tech Stack
 - **Framework**: Next.js with App Router
 - **Styling**: Tailwind CSS, ShadCN/UI
-- **Auth**: NextAuth.js / Clerk / Supabase Auth (whichever you’re using)
-- **Database**: Supabase or Firebase (specify which)
-- **Visualization**: Chart.js or similar for transaction graphs
+- **Auth**: Firebase
+- **Database**:  Firebase
+- **Visualization**: Chart.js
 
 ---
 

@@ -47,6 +47,7 @@ import {
   orderBy,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
+import { format } from 'date-fns';
 
 export function ExpensesDataTable() {
   const { user } = useAuth();
@@ -95,7 +96,7 @@ export function ExpensesDataTable() {
     [db]
   );
 
-  const addExpense = async (expense: Omit<Expense, 'id'>) => {
+  const addExpense = async (expense: Omit<Expense, 'id' | 'userId'>) => {
     if (!user?.uid || !db) return;
     await addDoc(collection(db, 'expenses'), { ...expense, userId: user.uid });
   };
@@ -227,7 +228,7 @@ export function ExpensesDataTable() {
                 </div>
                 <div className="flex justify-between items-center mt-3">
                   <span className="text-xs text-gray-400">
-                   {expense.paymentMethod}
+                    {expense.date ? format(new Date(expense.date), 'PPP') : 'No date'}
                   </span>
                   <div className="flex space-x-1">
                     {/* Action buttons would be rendered here based on your columns setup */}
